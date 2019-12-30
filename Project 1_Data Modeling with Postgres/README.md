@@ -1,6 +1,6 @@
 # Data Modeling with Postgres
 
-This is the first project in **Data Engineer Nanodgree** with Udacity. The project focuses on two concepts that have been learnt through the first two lessons in the first chapter, which are:
+This is the first project in **Data Engineering Nanodgree** with Udacity. The project focuses on two concepts that have been learnt through the first two lessons in the first chapter, which are:
 
 * Data modeling with Postgres
 * Build an ETL pipeline using Python
@@ -78,6 +78,10 @@ A star schema is used optimized for queries on song play analysis using the song
     * month - int
     * year - int
     * weekday - int
+
+The database schema is shown below:
+
+![Database Schema](/images/schema.png)
 
 ## Project Files
 

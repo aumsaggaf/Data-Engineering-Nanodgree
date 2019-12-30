@@ -6,6 +6,16 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """ 
+    Processes song data in JSON logs and insert into database tables. 
+  
+    Processes song data in JSON logs raw by raw, selects the wanted fields, and insert into songs and artists tables.
+  
+    Parameters: 
+    cur (psycopg2.cursor()): Cursor of the sparkifydb database
+    filepath (str): The path of the file to be analyzed  
+    """
+    
     # open song file
     df = pd.read_json(filepath, lines=True)
     df.head()
@@ -22,6 +32,17 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """ 
+    Processes log data in JSON logs and insert into database tables. 
+  
+    Processes song data in JSON logs raw by raw, selects the wanted fields, and insert into users and songplays tables.
+    It filters by NexSong and transforms them during processing.
+  
+    Parameters: 
+    cur (psycopg2.cursor()): Cursor of the sparkifydb database
+    filepath (str): The path of the file to be analyzed  
+    """
+    
     # open log file
     df = pd.read_json(filepath, lines=True)
     df.head()
@@ -43,7 +64,7 @@ def process_log_file(cur, filepath):
         cur.execute(time_table_insert, list(row))
 
     # load user table
-    user_df = user_df = df[['userId', 'firstName', 'lastName', 'gender', 'level']]
+    user_df = df[['userId', 'firstName', 'lastName', 'gender', 'level']]
 
     # insert user records
     for i, row in user_df.iterrows():
@@ -67,6 +88,22 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """ 
+    Go through the files in the filepath and processes the logs found. 
+  
+    Go through all the files in the filepath, processes the logs found, and retern the processed files.
+    It gets the total number of files that needs to be process and return the number of files that has been processed.
+  
+    Parameters: 
+    cur (psycopg2.cursor()): Cursor of the database
+    conn (psycopg2.connect()): Connection to the database
+    filepath (str): The path to the folder of the logs to be analyzed
+    func (python function): Function to be used to process each log
+    
+    Returns:
+    The processed files
+    """
+    
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -86,6 +123,14 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    Connects to the database and runs the previous functions to process the data.
+    
+    Connects to the database, extracts and transforms all data from song and user activity logs, and loads it into the database.
+
+    Usage: python etl.py
+    """
+    
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
